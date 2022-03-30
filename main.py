@@ -35,18 +35,6 @@ class Tree:
              print(atual.item,end=" ")
              self.inOrder(atual.dir)
   
-    def preOrder(self, atual):
-        if atual != None:
-             print(atual.item,end=" ")
-             self.preOrder(atual.esq)
-             self.preOrder(atual.dir)
-      
-    def posOrder(self, atual):
-        if atual != None:
-             self.posOrder(atual.esq)
-             self.posOrder(atual.dir)
-             print(atual.item,end=" ")
-
 def letraExisteNoArray(letra:str, array) -> bool:
     for ch in array:
         if ch == letra:
