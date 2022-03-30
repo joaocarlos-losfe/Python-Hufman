@@ -32,7 +32,7 @@ class Tree:
     def inOrder(self, atual):
         if atual != None:
              self.inOrder(atual.esq)
-             print(atual.item,end=" ")
+             print(f"{atual.item} ")
              self.inOrder(atual.dir)
   
 def letraExisteNoArray(letra:str, array) -> bool:
