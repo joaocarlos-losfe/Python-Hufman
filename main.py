@@ -35,12 +35,13 @@ def textoCodificado(dados, codigos):
     for c in dados:
         texto_codificado.append(codigos[c])
         
-    string = ''.join([str(item) for item in texto_codificado])    
-    return string
+    texto_original = ''.join([str(item) for item in texto_codificado])    
+    
+    return texto_original
 
 def totalBits(texto, bits_texto_codificado):
 
-    total_texto = len(texto) * 8
+    total_bits_texto_sem_compressao = len(texto) * 8
     total_bits_texto_comprimido = 0
     caracteres = bits_texto_codificado.keys()
 
@@ -48,10 +49,10 @@ def totalBits(texto, bits_texto_codificado):
         count = texto.count(ch)
         total_bits_texto_comprimido += count * len(bits_texto_codificado[ch])
 
-    print(f"Antes da compressão: {total_texto} bits")    
+    print(f"Antes da compressão: {total_bits_texto_sem_compressao} bits")    
     print(f"Depois da compressão: {total_bits_texto_comprimido} bits")  
 
-    print(f"ganho de {int((total_bits_texto_comprimido * 100) / total_texto) }%")
+    print(f"ganho de {int((total_bits_texto_comprimido * 100) / total_bits_texto_sem_compressao) }%")
 
           
 def comprimir(texto):
@@ -61,6 +62,7 @@ def comprimir(texto):
 
     print(f"\ncaracteres: {list(caracteres)}")
     print(f"frequencia: {list(frequencias)}")
+
     nos = []
     
     for caractere in caracteres:
@@ -87,24 +89,24 @@ def comprimir(texto):
     return saida_codificada, nos[0]
 
  
-def descomprimir(dados_codificados, huffman_arvore):
-    arvore_head = huffman_arvore
+def descomprimir(dados_comprimidos, arvore):
+    arvore_head = arvore
     saida = []
 
-    for x in dados_codificados:
+    for x in dados_comprimidos:
         if x == '1':
-            huffman_arvore = huffman_arvore.direita   
+            arvore = arvore.direita   
         elif x == '0':
-            huffman_arvore = huffman_arvore.esquerda
+            arvore = arvore.esquerda
         try:
-            if huffman_arvore.esquerda.caractere == None and huffman_arvore.direita.caractere == None:
+            if arvore.esquerda.caractere == None and arvore.direita.caractere == None:
                 pass
         except AttributeError:
-            saida.append(huffman_arvore.caractere)
-            huffman_arvore = arvore_head
+            saida.append(arvore.caractere)
+            arvore = arvore_head
         
-    string = ''.join([str(item) for item in saida])
-    return string        
+    texto_original = ''.join([str(item) for item in saida])
+    return texto_original        
 
 if __name__=='__main__':
 
