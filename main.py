@@ -17,13 +17,13 @@ def contarFrequencias(texto):
             caracteres[ch] += 1     
     return caracteres
 
-def calcularCodigos(no, valor=''):
+def capturarCodigoAscii(no, valor=''):
     novo_valor = valor + str(no.codigo)
 
     if(no.esquerda):
-        calcularCodigos(no.esquerda, novo_valor)
+        capturarCodigoAscii(no.esquerda, novo_valor)
     if(no.direita):
-        calcularCodigos(no.direita, novo_valor)
+        capturarCodigoAscii(no.direita, novo_valor)
 
     if(not no.esquerda and not no.direita):
         codigos[no.caractere] = novo_valor
@@ -80,7 +80,7 @@ def comprimir(texto):
         nos.remove(direita)
         nos.append(novo_no)
             
-    codigos = calcularCodigos(nos[0])
+    codigos = capturarCodigoAscii(nos[0])
     print("\ncaracteres e seus codigos: ", codigos)
     totalBits(texto, codigos)
     saida_codificada = textoCodificado(texto, codigos)
