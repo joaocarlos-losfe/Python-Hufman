@@ -1,6 +1,6 @@
 codigos = {}
 
-class Node:
+class No:
     def __init__(self, frequencia, caractere, esquerda=None, direita=None):
         self.frequencia = frequencia
         self.caractere = caractere
@@ -37,10 +37,25 @@ def textoCodificado(dados, codigos):
         
     string = ''.join([str(item) for item in texto_codificado])    
     return string
+
+def totalBits(texto, bits_texto_codificado):
+
+    total_texto = len(texto) * 8
+    total_bits_texto_comprimido = 0
+    caracteres = bits_texto_codificado.keys()
+
+    for ch in caracteres:
+        count = texto.count(ch)
+        total_bits_texto_comprimido += count * len(bits_texto_codificado[ch])
+
+    print(f"Antes da compressão: {total_texto} bits")    
+    print(f"Depois da compressão: {total_bits_texto_comprimido} bits")  
+
+    print(f"ganho de {int((total_bits_texto_comprimido * 100) / total_texto) }%")
+
           
-          
-def comprimir(dados):
-    caracteres_e_frequencias = contarFrequencias(dados)
+def comprimir(texto):
+    caracteres_e_frequencias = contarFrequencias(texto)
     caracteres = caracteres_e_frequencias.keys()
     frequencias = caracteres_e_frequencias.values()
 
@@ -49,7 +64,7 @@ def comprimir(dados):
     nos = []
     
     for caractere in caracteres:
-        nos.append(Node(caracteres_e_frequencias.get(caractere), caractere))
+        nos.append(No(caracteres_e_frequencias.get(caractere), caractere))
     
     while len(nos) > 1:
         nos = sorted(nos, key=lambda x: x.frequencia)
@@ -59,7 +74,7 @@ def comprimir(dados):
         esquerda.codigo = 0
         direita.codigo = 1
     
-        novo_no = Node(esquerda.frequencia + direita.frequencia, esquerda.caractere + direita.caractere, esquerda, direita)
+        novo_no = No(esquerda.frequencia + direita.frequencia, esquerda.caractere + direita.caractere, esquerda, direita)
     
         nos.remove(esquerda)
         nos.remove(direita)
@@ -67,9 +82,10 @@ def comprimir(dados):
             
     codigos = calcularCodigos(nos[0])
     print("\ncaracteres e seus codigos: ", codigos)
-    saida_codificada = textoCodificado(dados, codigos)
+    totalBits(texto, codigos)
+    saida_codificada = textoCodificado(texto, codigos)
+    return saida_codificada, nos[0]
 
-    return saida_codificada, nos[0]  
  
 def descomprimir(dados_codificados, huffman_arvore):
     arvore_head = huffman_arvore
@@ -92,7 +108,7 @@ def descomprimir(dados_codificados, huffman_arvore):
 
 if __name__=='__main__':
 
-    texto = "CASA PAPEL HOTEL PASTEL"
+    texto = "CASA_PAPEL_HOTEL_PASTEL"
     texto_codificado, arvore = comprimir(texto)
     print(f"\ntexto original: {texto}")
     print(f"Texto codificado: {texto_codificado}")
