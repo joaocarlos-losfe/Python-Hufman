@@ -70,7 +70,6 @@ def comprimir(dados):
     saida_codificada = textoCodificado(dados, codigos)
 
     return saida_codificada, nos[0]  
-    
  
 def descomprimir(dados_codificados, huffman_arvore):
     arvore_head = huffman_arvore
