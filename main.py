@@ -8,13 +8,13 @@ class Node:
         self.direita = direita
         self.codigo = ''
 
-def contarFrequencias(dados):
+def contarFrequencias(texto):
     caracteres = {}
-    for element in dados:
-        if caracteres.get(element) == None:
-            caracteres[element] = 1
+    for ch in texto:
+        if caracteres.get(ch) == None:
+            caracteres[ch] = 1
         else: 
-            caracteres[element] += 1     
+            caracteres[ch] += 1     
     return caracteres
 
 def calcularCodigos(no, valor=''):
