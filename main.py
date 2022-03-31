@@ -1,87 +1,100 @@
-class No:
-     def __init__(self, key, dir, esq):
-          self.item = key
-          self.dir = dir
-          self.esq = esq
+codigos = {}
 
-class Tree:
-    def __init__(self):
-         self.root = No(None,None,None)
-         self.root = None
+class Node:
+    def __init__(self, frequencia, caractere, esquerda=None, direita=None):
+        self.frequencia = frequencia
+        self.caractere = caractere
+        self.esquerda = esquerda
+        self.direita = direita
+        self.codigo = ''
 
-    def inserir(self, v):
-         novo = No(v,None,None)
+def contarFrequencias(dados):
+    caracteres = {}
+    for element in dados:
+        if caracteres.get(element) == None:
+            caracteres[element] = 1
+        else: 
+            caracteres[element] += 1     
+    return caracteres
+
+def calcularCodigos(no, valor=''):
+    novo_valor = valor + str(no.codigo)
+
+    if(no.esquerda):
+        calcularCodigos(no.esquerda, novo_valor)
+    if(no.direita):
+        calcularCodigos(no.direita, novo_valor)
+
+    if(not no.esquerda and not no.direita):
+        codigos[no.caractere] = novo_valor
          
-         if self.root == None:
-              self.root = novo
-         else:
-              atual = self.root
-              while True:
-                   anterior = atual
-                   if v <= atual.item:
-                        atual = atual.esq
-                        if atual == None:
-                               anterior.esq = novo
-                               return
-                   else:
-                        atual = atual.dir
-                        if atual == None:
-                                anterior.dir = novo
-                                return
-      
-    def inOrder(self, atual):
-        if atual != None:
-             self.inOrder(atual.esq)
-             print(f"{atual.item} ")
-             self.inOrder(atual.dir)
-  
-def letraExisteNoArray(letra:str, array) -> bool:
-    for ch in array:
-        if ch == letra:
-            return True
-    return False
+    return codigos        
 
-def separarCaracteres(frase:str) -> []:
-    caracteresSeparados = []
-    for letra in frase:
-        if not letraExisteNoArray(letra, caracteresSeparados):
-            caracteresSeparados.append(letra)
-    return caracteresSeparados
+def textoCodificado(dados, codigos):
+    texto_codificado = []
+    for c in dados:
+        texto_codificado.append(codigos[c])
+        
+    string = ''.join([str(item) for item in texto_codificado])    
+    return string
+          
+          
+def comprimir(dados):
+    caracteres_e_frequencias = contarFrequencias(dados)
+    caracteres = caracteres_e_frequencias.keys()
+    frequencias = caracteres_e_frequencias.values()
 
-def contarFrequencia(frase:str) -> []:
-    caracteresSeparados = separarCaracteres(frase)
-    frequencias = []
-    contador = 0
-
-    caractesEFrequencias = {}
+    print(f"\ncaracteres: {list(caracteres)}")
+    print(f"frequencia: {list(frequencias)}")
+    nos = []
     
-    for ch in caracteresSeparados:
-        for letra in frase:
-            if letra == ch:
-                contador+=1
-                
-        frequencias.append(contador)
-        caractesEFrequencias[ch] = contador
-        contador = 0
+    for caractere in caracteres:
+        nos.append(Node(caracteres_e_frequencias.get(caractere), caractere))
     
-    return [frequencias, caracteresSeparados, caractesEFrequencias]
-
-
-if __name__ == '__main__':
+    while len(nos) > 1:
+        nos = sorted(nos, key=lambda x: x.frequencia)
+        direita = nos[0]
+        esquerda = nos[1]
     
-    #https://pt.wikipedia.org/wiki/Codifica%C3%A7%C3%A3o_de_Huffman
-
-    arv = Tree()
-   
-    frase:str = "CASA PAPEL HOTEL PASTEL" 
-    [frequencias, caracteresSeparados, caracteresEfrequencias] = contarFrequencia(frase)
-
-    print("------\n")
-
-    for freq in caracteresEfrequencias:
-        print(freq, caracteresEfrequencias[freq])
+        esquerda.codigo = 0
+        direita.codigo = 1
     
-    frequencias.sort()
+        novo_no = Node(esquerda.frequencia + direita.frequencia, esquerda.caractere + direita.caractere, esquerda, direita)
+    
+        nos.remove(esquerda)
+        nos.remove(direita)
+        nos.append(novo_no)
+            
+    codigos = calcularCodigos(nos[0])
+    print("\ncaracteres e seus codigos: ", codigos)
+    saida_codificada = textoCodificado(dados, codigos)
 
-    print(f"\nfrequencias ordenadas: {frequencias}\n")
+    return saida_codificada, nos[0]  
+    
+ 
+def descomprimir(dados_codificados, huffman_arvore):
+    arvore_head = huffman_arvore
+    saida = []
 
+    for x in dados_codificados:
+        if x == '1':
+            huffman_arvore = huffman_arvore.direita   
+        elif x == '0':
+            huffman_arvore = huffman_arvore.esquerda
+        try:
+            if huffman_arvore.esquerda.caractere == None and huffman_arvore.direita.caractere == None:
+                pass
+        except AttributeError:
+            saida.append(huffman_arvore.caractere)
+            huffman_arvore = arvore_head
+        
+    string = ''.join([str(item) for item in saida])
+    return string        
+
+if __name__=='__main__':
+
+    texto = "CASA PAPEL HOTEL PASTEL"
+    texto_codificado, arvore = comprimir(texto)
+    print(f"\ntexto original: {texto}")
+    print(f"Texto codificado: {texto_codificado}")
+    print(f"Texto decodificado: {descomprimir(texto_codificado, arvore)}\n")
