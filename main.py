@@ -52,7 +52,7 @@ def totalBits(texto, bits_texto_codificado):
     print(f"Antes da compressão: {total_bits_texto_sem_compressao} bits")    
     print(f"Depois da compressão: {total_bits_texto_comprimido} bits")  
 
-    print(f"ganho de {int((total_bits_texto_comprimido * 100) / total_bits_texto_sem_compressao) }%")
+    print(f"redução de {int((total_bits_texto_comprimido * 100) / total_bits_texto_sem_compressao) }%")
 
           
 def comprimir(texto):
