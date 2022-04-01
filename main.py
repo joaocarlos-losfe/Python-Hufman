@@ -106,6 +106,7 @@ def descomprimir(dados_comprimidos, arvore):
             arvore = arvore_head
         
     texto_original = ''.join([str(item) for item in saida])
+    
     return texto_original        
 
 if __name__=='__main__':
@@ -113,5 +114,5 @@ if __name__=='__main__':
     texto = "CASA_PAPEL_HOTEL_PASTEL"
     texto_codificado, arvore = comprimir(texto)
     print(f"\ntexto original: {texto}")
-    print(f"Texto codificado: {texto_codificado}")
+    print(f"Texto comprimido (bits): {texto_codificado}")
     print(f"Texto decodificado: {descomprimir(texto_codificado, arvore)}\n")
