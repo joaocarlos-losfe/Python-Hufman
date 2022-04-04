@@ -39,21 +39,11 @@ def textoCodificado(dados, codigos):
     
     return texto_original
 
-def totalBits(texto, bits_texto_codificado):
-
-    total_bits_texto_sem_compressao = len(texto) * 8
-    total_bits_texto_comprimido = 0
-    caracteres = bits_texto_codificado.keys()
-
-    for ch in caracteres:
-        count = texto.count(ch)
-        total_bits_texto_comprimido += count * len(bits_texto_codificado[ch])
-
-    print(f"Antes da compressão: {total_bits_texto_sem_compressao} bits")    
-    print(f"Depois da compressão: {total_bits_texto_comprimido} bits")  
-
-    print(f"redução de {int((total_bits_texto_comprimido * 100) / total_bits_texto_sem_compressao) }%")
-
+def totalBits(texto, bits_texto_codificado, saida_codificado):
+    tamOriginal = len(texto)*8
+    tamCod = len(saida_codificado)
+    taxa = round(100 - (tamCod / (tamOriginal / 100)), 2)
+    print(f"redução de {taxa}%")
           
 def comprimir(texto):
     caracteres_e_frequencias = contarFrequencias(texto)
@@ -84,8 +74,9 @@ def comprimir(texto):
             
     codigos = capturarCodigoAscii(nos[0])
     print("\ncaracteres e seus codigos: ", codigos)
-    totalBits(texto, codigos)
+    
     saida_codificada = textoCodificado(texto, codigos)
+    totalBits(texto, codigos, saida_codificada)
     return saida_codificada, nos[0]
 
  
@@ -111,7 +102,7 @@ def descomprimir(dados_comprimidos, arvore):
 
 if __name__=='__main__':
 
-    texto = "CASA_PAPEL_HOTEL_PASTEL"
+    texto = "CASA_PASTEL_HOTEL_PAPEL"
     texto_codificado, arvore = comprimir(texto)
     print(f"\ntexto original: {texto}")
     print(f"Texto comprimido (bits): {texto_codificado}")
